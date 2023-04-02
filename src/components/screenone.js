@@ -1,69 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import "../css/screenone.css";
+import React, { useState, useEffect } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { FilterMatchMode } from 'primereact/api'
+import { InputText } from "primereact/inputtext";
 import axios from 'axios';
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import Navbar from './navbar';
 
-
-const ScreenOne = () => {
-    const [apiData,setapidata]=useState();
-   
-    //mounting phase of the component 
+export default function PaginatorBasicDemo() {
+  const [user, setUser] = useState([]);
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  })
   useEffect(() => {
-    // on mounting phase here i hit the api and get the response
-    async function getapidata() {
-      const response = await axios.get("https://6321f66582f8687273bdac1b.mockapi.io/users");
+    axios.get("https://6321f66582f8687273bdac1b.mockapi.io/users").then((data) => { setUser(data.data) });
 
-  setapidata(response.data);
-    }
-    getapidata();
-},[]);
-  
+  }, []);
 
   return (
     <>
-   <Navbar/>
-    <div className='Table'>
-     {apiData?  <TableContainer component={Paper} sx={{ width: 800,marginTop:"5px",border:"5px" }}>
-            <Table aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                <TableCell align="right" style={{fontWeight:"bold"}}>ID</TableCell>
-                  <TableCell align="right" style={{fontWeight:"bold"}}>Name</TableCell>
-                  <TableCell align="right" style={{fontWeight:"bold"}}>Email</TableCell>
-                  <TableCell align="right" style={{fontWeight:"bold"}}>Age</TableCell>
-                  <TableCell align="right" style={{fontWeight:"bold"}}>Gender</TableCell>
-                  <TableCell align="right" style={{fontWeight:"bold"}}>Course</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {apiData.map((row) => (
-                  <TableRow key={row.id}>
-                    
-                    <TableCell align="right">{row.id}</TableCell>
-                    <TableCell align="right">{row.name}</TableCell>
-                    <TableCell align="right">{row.email}</TableCell>
-                    <TableCell align="right">{row.age}</TableCell>
-                    <TableCell align="right">{row.gender}</TableCell>
-                    <TableCell align="right">{row.courses}</TableCell>
-                    
+      <Navbar />
+      <div style={{alignItems:"center",alignContent:"center"}}>
+      <h1>ScreenOne  </h1>
+      <h4 >Global Filter</h4>
+      <InputText onInput={(e) => {
+          setFilters({ 
+            global: { value: e.target.value, matchMode: FilterMatchMode.CONTAINS } 
+          })
+        }}
+        style={{width:"20%"}}>
 
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          :<></>}
-    </div>
+        </InputText>
+        </div>
+      <div className="card">
+       
+        <DataTable value={user} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }} filters={filters}>
+          <Column field="id" header="ID" style={{ width: '25%' }} > </Column>
+          <Column field="name" header="Name" style={{ width: '25%' }} ></Column>
+          <Column field="email" header="Email" style={{ width: '25%' }} ></Column>
+          <Column field="age" header="Age" style={{ width: '25%' }} ></Column>
+          <Column field="gender" header="Gender" style={{ width: '25%' }} ></Column>
+          <Column field="courses" header="Courses" style={{ width: '25%' }} ></Column>
+        </DataTable>
+      </div>
     </>
-  )
+  );
 }
-
-export default ScreenOne
