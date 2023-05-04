@@ -1,20 +1,25 @@
-import React from 'react'
+
+import React, { useState } from 'react'
 import {Link} from "react-router-dom";
 import "../css/NavbarStyles.css"
+import Screentwo from "../components/screentwo";
+import Screenone from "../components/screenone";
 const Navbar = () => {
+  const [displayscreen,setdisplayscreen] =useState(true);
+  console.log(displayscreen);
   return (
     <div>
-    
-      <nav className="navbar navbar-expand-lg navbar-light bg-light ">
+
+      <nav className="navbar navbar-expand-lg navbar-light bg-dark ">
   <div className="container-fluid ">
-   <h1>Pariporna Task</h1>
-    <div className="collapse navbar-collapse" id="navbarText">
-      <ul className="nav justify-content-center">
+   <h1 style={{ color: 'white' }}>Pariporna Task</h1>
+    <div className="collapse navbar-collapse" id="navbarText" >
+      <ul className="nav justify-content-center" >
         <li className="nav-item">
-         <Link to="/screenone" style={{ textDecoration: 'none' }} >screenone</Link>
+         <Link onClick={()=>setdisplayscreen(true)} className=" btn-info"  >screeone</Link>
         </li>
         <li className="nav-item ">
-          <Link to="/screenTwo">screenTwo</Link>
+          <Link onClick={()=>setdisplayscreen(false)} className="btn-info">screenTwo</Link>
         </li>
         
     
@@ -22,6 +27,7 @@ const Navbar = () => {
     </div>
   </div>
 </nav>
+{displayscreen ? <Screenone/> : <Screentwo/>}
     </div>
   )
 }
